@@ -1,1 +1,0 @@
-# normas_teaching_code_challenge

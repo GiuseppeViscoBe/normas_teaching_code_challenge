@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import dotenv from 'dotenv';
-
 import axios from "axios";
 import { searchResponseFiltered } from "../models/searchResponseFiltered.interface";
 import { UnsplashSearchResponse } from "../models/unsplashSearchResponse.interface";
@@ -21,10 +20,11 @@ export const searchImage = async (
     });
 
 
+    //TODO
     //make it a function
     //is it correct the type of item ? 
     const results: searchResponseFiltered[] = response.data.results.map((item: searchResponseFiltered) => ({
-      id: item.id,
+      imageId: item.imageId,
       width: item.width,
       height: item.height,
       description: item.description ? item.description : 'No description available' ,

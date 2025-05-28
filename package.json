@@ -6,7 +6,6 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "rimraf ./build && tsc",
     "dev": "ts-node-dev --poll src/server.ts",
     "start": "npm run build && node build/server.js"
   },

@@ -29,6 +29,7 @@ export const saveFavourite = async (
       throw error
     }
 
+    console.log(favouriteImageToSave)
     const newFavouriteImage = await FavouritesModel.create({
       ...favouriteImageToSave,
       userId,
@@ -36,13 +37,14 @@ export const saveFavourite = async (
 
     res.status(201).json({
       success: true,
-      message: "User created succesfully",
+      message: "Favourite saved succesfully",
       data: {
         favourite: newFavouriteImage,
       },
     });
+
   } catch (error) {
-    console.log(error);
+    next(error)
   }
 };
 
@@ -70,8 +72,7 @@ export const getFavourites = async (
       },
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    next(error)
   }
 };
 

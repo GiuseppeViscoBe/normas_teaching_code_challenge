@@ -1,10 +1,10 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectToDb from "./config/mongoDb";
+import app from "./config/app";
 
 dotenv.config();
 
-const app = express();
 
 const PORT = process.env.PORT || 8000;
 

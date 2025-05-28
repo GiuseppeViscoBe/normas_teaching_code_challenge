@@ -2,6 +2,7 @@ import {
   prop,
   getModelForClass,
   modelOptions,
+  index,
 } from "@typegoose/typegoose";
 
 @modelOptions({
@@ -10,7 +11,6 @@ import {
     collection: "favourites", 
   },
 })
-
 
 class UrlList {
   @prop({ required: true })
@@ -32,8 +32,9 @@ class UrlList {
   public small_s3!: string;
 }
 
+@index({ imageId: 1, userId: 1 }, { unique: true })
 export class Favourites {
-  @prop({ required: true, unique: true })
+  @prop({ required: true})
   public imageId!: string;
 
   @prop({ required: true })

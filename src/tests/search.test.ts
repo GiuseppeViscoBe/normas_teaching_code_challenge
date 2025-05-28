@@ -30,31 +30,31 @@ describe('searchImage controller', () => {
       data: {
         results: [
           {
-            imageId: 'abc123',
-            width: 500,
-            height: 300,
-            description: 'A cat',
+            id: 'UQwbKtu-2Ek',
+            width: 2327,
+            height: 2973,
+            description: 'Four bees on their honeycomb. ',
             urls: {
-              raw: 'raw_url',
-              full: 'full_url',
-              regular: 'regular_url',
-              small: 'small_url',
-              thumb: 'thumb_url',
-              small_s3: 'small_s3_url',
+              raw: 'raw_url_1',
+              full: 'full_url_1',
+              regular: 'regular_url_1',
+              small: 'small_url_1',
+              thumb: 'thumb_url_1',
+              small_s3: 'small_s3_url_1',
             },
           },
           {
-            imageId: 'def456',
-            width: 800,
-            height: 600,
+            id: 'ys-sZZkdT1s',
+            width: 5000,
+            height: 3333,
             description: null,
             urls: {
-              raw: 'raw2',
-              full: 'full2',
-              regular: 'regular2',
-              small: 'small2',
-              thumb: 'thumb2',
-              small_s3: 'small_s3_2',
+              raw: 'raw_url_2',
+              full: 'full_url_2',
+              regular: 'regular_url_2',
+              small: 'small_url_2',
+              thumb: 'thumb_url_2',
+              small_s3: 'small_s3_url_2',
             },
           },
         ],
@@ -80,36 +80,41 @@ describe('searchImage controller', () => {
     );
 
     expect(mockRes.status).toHaveBeenCalledWith(201);
-    expect(mockRes.json).toHaveBeenCalledWith([
-      {
-        imageId: 'abc123',
-        width: 500,
-        height: 300,
-        description: 'A cat',
-        urls: {
-          raw: 'raw_url',
-          full: 'full_url',
-          regular: 'regular_url',
-          small: 'small_url',
-          thumb: 'thumb_url',
-          small_s3: 'small_s3_url',
-        },
+    expect(mockRes.json).toHaveBeenCalledWith({
+      success: true,
+      message: 'Data retrieved succesfully from api',
+      data: {
+        imageResults: [
+          {
+            imageId: 'UQwbKtu-2Ek',
+            width: 2327,
+            height: 2973,
+            description: 'Four bees on their honeycomb. ',
+            urls: {
+              raw: 'raw_url_1',
+              full: 'full_url_1',
+              regular: 'regular_url_1',
+              small: 'small_url_1',
+              thumb: 'thumb_url_1',
+              small_s3: 'small_s3_url_1',
+            },
+          },
+          {
+            imageId: 'ys-sZZkdT1s',
+            width: 5000,
+            height: 3333,
+            description: 'No description available',
+            urls: {
+              raw: 'raw_url_2',
+              full: 'full_url_2',
+              regular: 'regular_url_2',
+              small: 'small_url_2',
+              thumb: 'thumb_url_2',
+              small_s3: 'small_s3_url_2',
+            },
+          },
+        ],
       },
-      {
-        imageId: 'def456',
-        width: 800,
-        height: 600,
-        description: 'No description available',
-        urls: {
-          raw: 'raw2',
-          full: 'full2',
-          regular: 'regular2',
-          small: 'small2',
-          thumb: 'thumb2',
-          small_s3: 'small_s3_2',
-        },
-      },
-    ]);
+    });
   });
-
 });

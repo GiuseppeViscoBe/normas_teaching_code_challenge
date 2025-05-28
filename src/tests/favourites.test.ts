@@ -61,7 +61,7 @@ describe('Favourites Controller', () => {
       expect(mockRes.status).toHaveBeenCalledWith(201);
       expect(mockRes.json).toHaveBeenCalledWith({
         success: true,
-        message: 'User created succesfully',
+        message: 'Favourite saved succesfully',
         data: { favourite: created },
       });
     });
@@ -71,7 +71,7 @@ describe('Favourites Controller', () => {
     it('should return 400 if user-id is missing', async () => {
       const req = { headers: {} } as Request;
       await getFavourites(req, mockRes, mockNext);
-      expect(mockRes.status).toHaveBeenCalledWith(500); // based on catch block behavior
+      expect(mockNext).toHaveBeenCalled();
     });
 
     it('should return favourites list', async () => {

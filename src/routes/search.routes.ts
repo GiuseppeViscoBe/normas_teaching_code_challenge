@@ -3,8 +3,6 @@ import { searchImage } from '../controllers/search.controllers'
 
 
 const searchRouter = express.Router()
-
-
 searchRouter.get('/', searchImage )
 
 export default searchRouter

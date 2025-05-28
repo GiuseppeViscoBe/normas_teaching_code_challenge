@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { FavouritesModel } from "../models/favourite.model";
+import { CustomError } from "../interfaces/error.interface";
 
 export const saveFavourite = async (
   req: Request,
@@ -10,7 +11,9 @@ export const saveFavourite = async (
     const userId = req.headers["user-id"] as string;
 
     if (!userId) {
-      return res.status(400).json({ error: "Missing user-id header" });
+      const error : CustomError = new Error("Missing user-id header")
+      error.statusCode = 400
+      throw error
     }
 
     const favouriteImageToSave = req.body;
@@ -21,7 +24,9 @@ export const saveFavourite = async (
     });
 
     if (exists) {
-      return res.status(409).json({ message: "Image already in favourites" });
+      const error : CustomError = new Error("Image already in favourites")
+      error.statusCode = 409
+      throw error
     }
 
     const newFavouriteImage = await FavouritesModel.create({
@@ -50,7 +55,9 @@ export const getFavourites = async (
     const userId = req.headers["user-id"] as string;
 
     if (!userId) {
-      return res.status(400).json({ error: "Missing user-id header" });
+      const error : CustomError = new Error("Missing user-id header")
+      error.statusCode = 400
+      throw error
     }
 
     const favouritesImageList = await FavouritesModel.find({userId});
@@ -77,23 +84,25 @@ export const deleteFavourite = async (
     const userId = req.headers["user-id"] as string;
 
     if (!userId) {
-      return res.status(400).json({ error: "Missing user-id header" });
+      const error : CustomError = new Error("Missing user-id header")
+      error.statusCode = 400
+      throw error
     }
 
     const { imageId } = req.params;
 
-    console.log(req.params)
     if (!imageId) {
-      return res.status(400).json({ error: "Missing image id in URL" });
+      const error : CustomError = new Error("Missing image id in URL")
+      error.statusCode = 400
+      throw error
     }
 
     const deleted = await FavouritesModel.findOneAndDelete({ imageId, userId });
 
     if (!deleted) {
-      return res.status(404).json({
-        success: false,
-        message: "Favourite not found for this user",
-      });
+      const error : CustomError = new Error("Favourite not found for this user")
+      error.statusCode = 404
+      throw error
     }
 
     res.status(200).json({

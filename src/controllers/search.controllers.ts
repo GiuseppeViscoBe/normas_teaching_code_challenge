@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import dotenv from 'dotenv';
 import axios from "axios";
-import { searchResponseFiltered } from "../models/searchResponseFiltered.interface";
-import { UnsplashSearchResponse } from "../models/unsplashSearchResponse.interface";
+import { searchResponseFiltered } from "../interfaces/searchResponseFiltered.interface";
+import { UnsplashSearchResponse } from "../interfaces/unsplashSearchResponse.interface";
 
 dotenv.config();
 

@@ -1,5 +1,5 @@
 export interface searchResponseFiltered {
-    imageid : string,
+    imageId : string,
     width : number,
     height : number,
     urls : urlList,

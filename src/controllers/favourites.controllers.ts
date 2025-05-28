@@ -101,7 +101,7 @@ export const deleteFavourite = async (
     const deleted = await FavouritesModel.findOneAndDelete({ imageId, userId });
 
     if (!deleted) {
-      const error : CustomError = new Error("Favourite not found for this user")
+      const error : CustomError = new Error("Favourite imageId not found for this user")
       error.statusCode = 404
       throw error
     }

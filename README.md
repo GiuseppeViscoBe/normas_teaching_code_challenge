@@ -1,78 +1,75 @@
-# 📸 Ricerca Immagini API ReadMe
+# 📸 Image Search API ReadMe
 
-### Panoramica
-Un'applicazione backend che consente di cercare immagini tramite Unsplash, salvare immagini nei preferiti e gestire le immagini preferite.
+### Overview  
+A backend application that allows searching images via Unsplash, saving images to favourites, and managing favourite images.
 
+### Technologies Used  
+- **Node.js**: Backend server environment.  
+- **Express.js**: Web framework for Node.js.  
+- **MongoDB**: Database used to manage favourites.  
+- **TypeScript**: Programming language to ensure type safety.  
+- **Typegoose**: Schema validation library for defining and validating MongoDB schemas in TypeScript.  
+- **Axios**: HTTP client used to make requests to the Unsplash API and retrieve image data.  
+- **Morgan**: Middleware for easy and configurable HTTP request logging.  
+- **Pino**: High-performance logger for Node.js, used for structured and asynchronous system and error logging.
 
-### Tecnologie usate
-- **Node.js**: Server environment di backend.
-- **Express.js**: Framework web per Node.js.
-- **MongoDb**: Database usato per gestire i preferiti.
-- **TypeScript**: Linguaggio di programmazione per garantire la sicurezza dei tipi.
-- **Typegoose**: Schema validation library per la definizione e validazione degli schemi MongoDB in TypeScript.
-- **Axios**: Client HTTP usato per effettuare richieste verso l’API di Unsplash e recuperare i dati delle immagini.
-- **Morgan**: Middleware per il logging delle richieste HTTP in modo semplice e configurabile.
-- **Pino**: Logger ad alte prestazioni per Node.js, usato per il logging strutturato e asincrono delle informazioni di sistema e degli errori.
+## 🚀 Features
 
-
-## 🚀 Funzionalità
-
-### 🔍 Ricerca Immagini
-
-- Effettua una ricerca su [Unsplash](https://unsplash.com) tramite query testuale (`/search?query=gatti`)
-- Risposta **strutturata** con le seguenti proprietà:
-  - `id`
-  - `width`
-  - `height`
-  - tutti gli URL disponibili (es. `regular`, `thumb`, ecc.)
+### 🔍 Image Search  
+- Perform a search on [Unsplash](https://unsplash.com) via text query (`/search?query=cats`)  
+- **Structured** response with the following properties:  
+  - `id`  
+  - `width`  
+  - `height`  
+  - all available URLs (e.g. `regular`, `thumb`, etc.)  
   - `description`
 
-### ⭐ Gestione Preferiti
+### ⭐ Favourites Management  
+- Add a photo to favourites  
+- Remove a photo from favourites  
+- View all saved favourite images  
 
-- Aggiunta di una foto ai preferiti
-- Rimozione di una foto dai preferiti
-- Visualizzazione di tutte le immagini salvate
-
-## 🧭 API Endpoints 
+## 🧭 API Endpoints  
 
 Base URL: `/api/1`
 
 ---
 
-### 🔍 Ricerca Immagini
+### 🔍 Image Search
 
-- **GET** `/search?query=<termine>&page=<numero>`
+- **GET** `/search?query=<term>&page=<number>`
 
-Effettua una ricerca di immagini su Unsplash in base al termine specificato e supporta la paginazione tramite il parametro `page`.
+Search Unsplash images based on the specified term and support pagination via the `page` parameter.
 
-**Parametri Query:**
+**Query Parameters:**
 
-| Nome    | Tipo   | Descrizione                           |
-|---------|--------|-------------------------------------|
-| query   | string | Termine di ricerca (es. "gatti")    |
-| page    | number | Numero della pagina (opzionale)     |
-| per_page| number | Numero di risultati per pagina (opzionale) |
+| Name     | Type   | Description                      |
+|----------|--------|--------------------------------|
+| query    | string | Search term (e.g. "cats")       |
+| page     | number | Page number (optional)           |
+| per_page | number | Results per page (optional)      |
 
-**Comportamento:**
+**Behavior:**  
+- Makes a call to the Unsplash API using `axios`.  
+- Uses `UNSPLASH_URL` as endpoint and `UNSPLASH_ACCESS_KEY` as API key in the `Authorization` header.  
+- Results are filtered and transformed by the `transformToFilteredImage` function, which extracts only necessary properties (`id`, `width`, `height`, `urls`, `description`).  
 
-- Effettua una chiamata verso l’API di Unsplash usando `axios`.
-- Usa `UNSPLASH_URL` come endpoint e `UNSPLASH_ACCESS_KEY` come API key nell’header `Authorization`.
-- I risultati sono filtrati e trasformati tramite la funzione `transformToFilteredImage` che estrae solo le proprietà necessarie (`id`, `width`, `height`, `urls`, `description`).
 ---
 
-### ⭐ Gestione Preferiti
+### ⭐ Favourites Management
 
-Tutte le rotte per i preferiti richiedono l’header `user-id` per identificare l’utente.
+All favourites routes require the `user-id` header to identify the user.
+
 ---
 
-#### Aggiungi una foto ai preferiti
+#### Add a Photo to Favourites
 
 - **POST** `/favourites`
 
-**Header:**
-- `user-id`: string (obbligatorio)
+**Headers:**  
+- `user-id`: string (required)
 
-**Body JSON:**
+**JSON Body:**
 
 ```json
 {
@@ -83,106 +80,112 @@ Tutte le rotte per i preferiti richiedono l’header `user-id` per identificare 
     "regular": "https://...",
     "thumb": "https://..."
   },
-  "description": "Una bellissima immagine"
+  "description": "A beautiful image"
 }
+
 ```
 
-**Comportamento:**
-- Se manca user-id nell’header, risponde con errore 400.
-- Se l’immagine è già presente nei preferiti per quell’utente, risponde con errore 409.
-- In caso di successo, salva l’immagine associandola all’utente e ritorna uno status 201 con i dettagli.
+**Behavior:**
+- If the user-id header is missing, it responds with a 400 error.
+- If the image is already in the favourites for that user, it responds with a 409 error.
+- On success, it saves the image associated with the user and returns a 201 status with the details.
 
-**Risposta:**
+**Response:**
 ```json
 {
   "success": true,
   "message": "Favourite saved succesfully",
   "data": {
     "favourite": {
-      /* dati dell’immagine salvata */
+      /* saved image data */
     }
   }
 }
 ```
 
-#### Recupera tutte le immagini preferite
+#### Retrieve All Favourite Images
 
 
 - **GET** `/favourites`
 
 **Header:**
-- `user-id`: string (obbligatorio)
+- `user-id`: string (required)
 
-**Comportamento:**
-- Se manca user-id nell’header, risponde con errore 400.
-- Restituisce la lista delle immagini salvate come preferite dall’utente.
+**Behavior:**
+- If the user-id header is missing, responds with error 400.
+- Returns the list of images saved as favourites by the user.
 
-**Risposta:**
+**Response:**
 ```json
 {
   "success": true,
   "message": "Favourites retrieved successfully",
   "data": {
     "favourites": [
-      /* array di immagini preferite */
+      /* array of favourite images */
     ]
   }
 }
+
 ```
 
-#### Rimuovi una foto dai preferiti
+#### Remove an Image from Favourites
 
 - **DELETE** `/favourites/:imageId`
 
 **Header:**
-- `user-id`: string (obbligatorio)
+- `user-id`: string (required)
 
-**Parametri URL:**
-- `imageId`: string (obbligatorio)
+**URL Parameters:**
+- `imageId`: string (required)
 
-**Comportamento:**
-- Se manca user-id nell’header, risponde con errore 400.
-- Se non trova la foto tra i preferiti per quell’utente, risponde con errore 404.
-- In caso di successo, elimina l’immagine dai preferiti e ritorna lo status 200.
+**Behavior:**
+- If the user-id header is missing, responds with error 400.
+- If the image is not found among favourites for that user, responds with error 404.
+- On success, deletes the image from favourites and returns status 200.
 
-**Risposta:**
+**Response:**
 ```json
 {
   "success": true,
   "message": "Favourites retrieved successfully",
   "data": {
     "favourites": [
-      /* array di immagini preferite */
+      /* array of favourite images */
     ]
   }
 }
+
 ```
 
 ## ⚙️ Setup
 
-### 1. Clona il repository
+### 1. Clone the repository
 
 ```bash
 git clone <repository-url>
-cd <nome-cartella-progetto>
+cd <project-folder-name>
+
 ```
 
-### 2. Installa le dipendenze
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Configura le variabili d'ambiente
+### 3.Configure environment variables
 - Crea un file .env nella root del progetto e definisci le seguenti variabili:
 
-- UNSPLASH_ACCESS_KEY — la tua API key di Unsplash
-- PORT — la porta su cui avviare il server (es. 8001)
-- MONGO_URI — URI di connessione al database MongoDB
-- ENVIRONMENT — ambiente di esecuzione (es. development)
-- UNSPLASH_URL — URL dell’endpoint Unsplash (es. https://api.unsplash.com/search/photos)
+Create a .env file in the root of the project and define the following variables:
 
-Esempio di .env: 
+- UNSPLASH_ACCESS_KEY — your Unsplash API key
+- PORT — the port to start the server on (e.g., 8001)
+- MONGO_URI — MongoDB connection URI
+- ENVIRONMENT — execution environment (e.g., development)
+- UNSPLASH_URL — Unsplash endpoint URL (e.g., https://api.unsplash.com/search/photos)
+
+Example .env:
   ```json
 UNSPLASH_ACCESS_KEY=your_unsplash_key_here
 PORT=8001
@@ -190,26 +193,25 @@ MONGO_URI=your_mongodb_connection_string_here
 ENVIRONMENT=development
 UNSPLASH_URL=https://api.unsplash.com/search/photos
   ```
-### 4. Avvia il server
+### 4. Start the server
 
 ```bash
 npm run dev
 ```
 
-**Il server sarà disponibile di default su http://localhost:8000.**
-**Altrimenti alla porta indicata nel file di configurazione.**
+The server will be available by default at http://localhost:8000.
+Otherwise on the port specified in the configuration file.
 
 ## 🧪 Test
 
-### Esecuzione dei test
-
-Per eseguire tutti i test una volta:
+### Run all tests
+To run all tests once:
 
 ```bash
 npm test
 ```
 
-Per eseguire i test in modalità watch (riavvio automatico ad ogni modifica):
+To run tests in watch mode (automatically restart on changes):
 ```bash
 npm run test:watch
 ```
